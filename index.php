@@ -3,20 +3,20 @@ require_once 'class/config.php';
 session_start();
 $db = DataBase::getInstance();
 
-$categories = $db->getCategoryList();
-$news = $db->getLastNews();
+$brands = $db->getBrandList();
+$pieces = $db->getLastPieces();
 
 ?>
 <html>
 <head>
-    <title>News</title>
+    <title>Auto pieces</title>
     <link rel="stylesheet" href="css/style.css" type="text/css" />
 </head>
 <body>
     <div id="container">
         <div id="header">
             <div class="header_content">
-                <h1>News blog...</h1>
+                <h1>Auto pieces...</h1>
             </div>
             <div class="header_login">
                 <?php if (isset($_SESSION['username']) && $_SESSION['status'] == 'admin') { ?>
@@ -36,19 +36,19 @@ $news = $db->getLastNews();
         </div>
         <div id="menu_bar">
             <div class="menu_cell"><a href="index.php">Acasa</a> </div>
-            <?php foreach ($categories as $category) { ?>
-            <div class="menu_cell">
-                <a href="getNews.php?category_id=<?php echo $category['category_id'] ?>">
-                    <?php echo $category['category_name'] ?>
-                </a>
-            </div>
-            <?php } ?>
+<!--            --><?php //foreach ($categories as $category) { ?>
+<!--            <div class="menu_cell">-->
+<!--                <a href="getNews.php?category_id=--><?php //echo $category['category_id'] ?><!--">-->
+<!--                    --><?php //echo $category['category_name'] ?>
+<!--                </a>-->
+<!--            </div>-->
+<!--            --><?php //} ?>
             <?php if (isset($_SESSION['username']) && $_SESSION['status'] == 'admin') { ?>
             <div class="menu_cell"><a href="addNews.php">Adauga o stire</a> </div>
             <?php } ?>
         </div>
         <div id="content">
-            <?php foreach ($news as $news_item) { ?>
+            <?php foreach ($brands as $brands_item) { ?>
             <div class="news_item">
                 <a href="getNews.php?category_id=<?php echo $news_item['category_id'] ?>&news_id=<?php echo $news_item['news_id'] ?>">
                     <div class="news_item_title">
@@ -68,7 +68,7 @@ $news = $db->getLastNews();
             &nbsp;
         </div>
         <div id="footer">
-            &copy; 2013, Inga Jora
+            &copy; 2013, Radu Pavelco
         </div>
     </div>
 </body>

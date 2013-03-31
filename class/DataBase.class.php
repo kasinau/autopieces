@@ -12,17 +12,12 @@ if (!isset($_SESSION)) {
 
 require_once 'class/config.php';
 
-define("DB_HOSTNAME", "127.0.0.1");
-define("DB_USERNAME", "root");
-define("DB_PASSWORD", "root");
-define("DB_DATABASE", "news");
-
 class DataBase
 {
     private $db_server, $connection = null, $dbh;
     public $result;
     private static $instance = null;
-    private $user = 'root', $password = '', $dsn = "mysql:dbname=news;host=127.0.0.1";
+    private $user = 'root', $password = 'root', $dsn = "mysql:dbname=autopieces;host=127.0.0.1";
 
     private function __construct()
     {
@@ -79,27 +74,29 @@ class DataBase
         }
     }
 
-    public function getCategoryList()
+    public function getBrandList()
     {
         try {
             $query = $this->dbh->query('SELECT *
-                FROM Category');
+                FROM brand');
             return $query->fetchAll();
         }
         catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not get news...');
+            $this->setError($e->getMessage(), 'Can not get brands...');
         }
     }
 
-    public function getLastNews()
+    public function getLastPieces()
     {
         try {
             $query = $this->dbh->query('SELECT *
-                FROM News, Photo, Category
+                FROM brand, car, generation, manufacturer, piece
                 WHERE
-                  News.news_id = Photo.news_id
-                  AND Category.category_id = News.category_id
-                ORDER BY date
+                  brand.id = car.brand_id
+                  AND car.id = generation.car_id
+                  AND generation.id = piece.generation_id
+                  AND manufacturer.id = piece.manufacturer_id
+                ORDER BY create_time DESC
                 LIMIT 10');
             return $query->fetchAll();
         } catch (PDOException $e){
@@ -187,15 +184,16 @@ class DataBase
     }
 
 
-    public function insertCategory()
+    public function insertBrand($name, $logo)
     {
         try {
-            $query = $this->dbh->prepare('INSERT INTO Category(category_name)' .
-                'VALUES(:category_name)');
-            $query->bindParam(':category_name', $_POST['category']);
+            $query = $this->dbh->prepare('INSERT INTO brand(name, logo)' .
+                'VALUES(:name, :logo)');
+            $query->bindParam(':name', $name);
+            $query->bindParam(':logo', $logo);
             $query->execute();
         } catch (PDOException $e){
-            $this->setError($e->getMessage(), 'Can not insert category...');
+            $this->setError($e->getMessage(), 'Can not insert brand...');
         }
     }
 
